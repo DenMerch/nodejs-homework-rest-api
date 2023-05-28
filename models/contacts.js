@@ -1,13 +1,8 @@
 const fs = require('fs/promises')
 const path = require("path");
-const { isNull } = require('util');
 const { v4: uuidv4 } = require('uuid');
 
 const contactsPath = path.join(__dirname, "contacts.json")
-
-const updateContacts = async (contacts) => {
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2))
-}
 
 const listContacts = async () => {
   const result = await fs.readFile(contactsPath)
