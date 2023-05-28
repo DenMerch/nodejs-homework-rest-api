@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 const contactsPath = path.join(__dirname, "contacts.json")
 
 const updateContacts = async (contacts) => {
-  await fs.writeFile(contactsPath, JSON.stringify(contacts))
+  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2))
 }
 
 const listContacts = async () => {
@@ -43,9 +43,9 @@ const addContact = async ({ name, email, phone }) => {
     phone,
     id: uuidv4()
   }
-  const newContacts = contacts.push(contact)
-  await updateContact(newContacts)
-  return newContacts;
+  contacts.push(contact)
+  await fs.writeFile(contactsPath, JSON.stringify(contacts))
+  return contacts;
 }
 
 const updateContact = async (contactId, body) => { }
