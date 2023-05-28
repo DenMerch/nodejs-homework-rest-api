@@ -1,7 +1,7 @@
 const express = require('express')
 
-
 const { createNewError } = require("../../helpers")
+const contactsSchema = require("../../schema/contacts-schema")
 
 const contacts = require("../../models/contacts")
 
@@ -45,15 +45,32 @@ router.delete('/:id', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
+    const { error } = contactsSchema.validate(req.body)
+    if (error) {
+      throw createNewError(400, error.message);
+    }
     const result = await contacts.addContact(req.body)
     res.status(201).json(result)
   } catch (error) {
-    next()
+    next(error)
   }
 })
 
-router.put('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
+router.put('/:id', async (req, res, next) => {
+  try {
+    const { error } = contactsSchema.validate(req.body)
+    if (error) {
+      throw createNewError(400, error.message);
+    }
+    const { id } = req.params;
+    const result = await contacts.updateContact(id, req.body)
+    if (!result) {
+      throw createNewError(404)
+    }
+    res.json(result)
+  } catch (error) {
+    next(error)
+  }
 })
 
 module.exports = router
