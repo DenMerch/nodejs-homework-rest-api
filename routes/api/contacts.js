@@ -2,7 +2,7 @@ const express = require('express')
 
 const { createNewError } = require("../../helpers")
 const contactsSchema = require("../../schema/contacts-schema")
-const { validateContact } = require('../../middlware')
+
 
 const contacts = require("../../models/contacts")
 
