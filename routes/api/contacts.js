@@ -63,8 +63,8 @@ router.post('/', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
   try {
     const { error } = contactsSchema.validate(req.body)
-    if (error) {
-      error.message = `missing required ${error.message.replace("is required", "")} field`
+    if (!req.body.length) {
+      error.message = `missing fields`
       throw createNewError(400, error.message);
     }
     const { id } = req.params;
@@ -77,5 +77,6 @@ router.put('/:id', async (req, res, next) => {
     next(error)
   }
 })
+
 
 module.exports = router
