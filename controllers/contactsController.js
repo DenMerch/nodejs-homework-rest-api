@@ -10,7 +10,7 @@ const getAll = async (req, res,) => {
 
 }
 
-const getContactById = async (req, res, next) => {
+const getContactById = async (req, res) => {
     const { id } = req.params;
     const result = await contacts.getContactById(id);
     if (!result.length) {
@@ -20,7 +20,7 @@ const getContactById = async (req, res, next) => {
     res.json(result)
 }
 
-const updateContactById = async (req, res, next) => {
+const updateContactById = async (req, res) => {
     const { error } = contactsSchema.validate(req.body)
     if (!Object.keys(req.body).length) {
         error.message = `missing fields`
@@ -34,7 +34,7 @@ const updateContactById = async (req, res, next) => {
     res.json(result)
 }
 
-const addContact = async (req, res, next) => {
+const addContact = async (req, res) => {
     const { error } = contactsSchema.validate(req.body)
     if (error) {
         error.message = `missing required ${error.message.replace("is required", "")} field`
@@ -44,7 +44,7 @@ const addContact = async (req, res, next) => {
     res.status(201).json(result)
 }
 
-const deleteContactById = async (req, res, next) => {
+const deleteContactById = async (req, res) => {
     const { id } = req.params;
     const result = await contacts.removeContact(id);
     if (!result) {
