@@ -1,2 +1,6 @@
-const cntrWrap = require("./cntlWrap")
-module.exports = cntrWrap;
+const { cntrWrap } = require("./cntlWrap")
+
+module.exports = {
+    cntrWrap,
+
+};
