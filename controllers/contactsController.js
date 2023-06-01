@@ -1,6 +1,5 @@
 const contacts = require("../models/contacts")
 const { createNewError } = require("../helpers")
-const contactsSchema = require("../schema/contacts-schema")
 const { cntrWrap } = require('../decorator')
 
 const getAll = async (req, res,) => {
@@ -21,11 +20,7 @@ const getContactById = async (req, res) => {
 }
 
 const updateContactById = async (req, res) => {
-    const { error } = contactsSchema.validate(req.body)
-    if (!Object.keys(req.body).length) {
-        error.message = `missing fields`
-        throw createNewError(400, error.message);
-    }
+
     const { id } = req.params;
     const result = await contacts.updateContact(id, req.body)
     if (!result) {
@@ -35,11 +30,8 @@ const updateContactById = async (req, res) => {
 }
 
 const addContact = async (req, res) => {
-    const { error } = contactsSchema.validate(req.body)
-    if (error) {
-        error.message = `missing required ${error.message.replace("is required", "")} field`
-        throw createNewError(400, error.message);
-    }
+
+    console.log(req.body);
     const result = await contacts.addContact(req.body)
     res.status(201).json(result)
 }

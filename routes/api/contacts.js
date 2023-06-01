@@ -5,6 +5,10 @@ const { getAll,
   addContact,
   updateContactById,
   deleteContactById, } = require("../../controllers/contactsController")
+const { contactsSchema } = require("../../schema/contacts-schema")
+const { validateBody } = require("../../decorator")
+
+
 const router = express.Router()
 
 
@@ -14,9 +18,9 @@ router.get('/:id', getContactById)
 
 router.delete('/:id', deleteContactById)
 
-router.post('/', addContact)
+router.post('/', validateBody(contactsSchema), addContact)
 
-router.put('/:id', updateContactById)
+router.put('/:id', validateBody(contactsSchema), updateContactById)
 
 
 module.exports = router
