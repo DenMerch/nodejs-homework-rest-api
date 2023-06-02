@@ -12,7 +12,7 @@ const getAll = async (req, res,) => {
 const getContactById = async (req, res) => {
     const { id } = req.params;
     const result = await contacts.getContactById(id);
-    if (!result.length) {
+    if (!result) {
 
         throw createNewError(404);
     }
