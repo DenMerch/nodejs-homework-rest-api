@@ -1,4 +1,4 @@
-const createNewError = require("../helpers")
+const { createNewError } = require("../helpers")
 
 const validateBody = schema => {
     const func = (req, res, next) => {
@@ -12,4 +12,4 @@ const validateBody = schema => {
     return func;
 }
 
-module.exports = { validateBody }
+module.exports = validateBody 
