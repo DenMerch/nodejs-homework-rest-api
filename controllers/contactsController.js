@@ -1,17 +1,21 @@
-const contacts = require("../models/contacts")
+const Contact = require("../models/contacts")
 const { createNewError } = require("../helpers")
-const { cntrWrap } = require('../decorator')
+const { cntrWrap } = require('../decorator');
+
 
 const getAll = async (req, res,) => {
 
-    const result = await contacts.listContacts();
+    const result = await Contact.find();
+
     res.json(result);
 
 }
 
 const getContactById = async (req, res) => {
     const { id } = req.params;
-    const result = await contacts.getContactById(id);
+    console.log(id);
+    // const result = await Contact.findOne({ _id: id });
+    const result = await Contact.findById(id);
     if (!result) {
 
         throw createNewError(404);
@@ -20,9 +24,8 @@ const getContactById = async (req, res) => {
 }
 
 const updateContactById = async (req, res) => {
-
     const { id } = req.params;
-    const result = await contacts.updateContact(id, req.body)
+    const result = await Contact.findOneAndUpdate({ _id: id }, req.body, { new: true })
     if (!result) {
         throw createNewError(404)
     }
@@ -31,17 +34,25 @@ const updateContactById = async (req, res) => {
 
 const addContact = async (req, res) => {
 
-    const result = await contacts.addContact(req.body)
+    const result = await Contact.create(req.body)
     res.status(201).json(result)
 }
 
 const deleteContactById = async (req, res) => {
     const { id } = req.params;
-    const result = await contacts.removeContact(id);
+    const result = await Contact.findOneAndDelete({ _id: id });
     if (!result) {
         throw createNewError(404);
     }
     res.json({ message: 'contact deleted' });
+}
+const updateStatusContact = async (req, res) => {
+    const { id } = req.params;
+    const result = await Contact.findOneAndUpdate({ _id: id }, req.body, { new: true })
+    if (!result) {
+        throw createNewError(404)
+    }
+    res.json(result)
 }
 
 module.exports = {
@@ -50,4 +61,5 @@ module.exports = {
     addContact: cntrWrap(addContact),
     updateContactById: cntrWrap(updateContactById),
     deleteContactById: cntrWrap(deleteContactById),
+    updateStatusContact: cntrWrap(updateStatusContact),
 }

@@ -4,9 +4,11 @@ const { getAll,
   getContactById,
   addContact,
   updateContactById,
-  deleteContactById, } = require("../../controllers/contactsController")
-const { contactsSchema } = require("../../schema/contacts-schema")
-const { validateBody } = require("../../decorator")
+  deleteContactById,
+  updateStatusContact, } = require("../../controllers/contactsController")
+const { contactsSchema, contactUpdateSchema } = require("../../schema/contacts-schema")
+const { validateBody, validateFavoriteBody } = require("../../decorator")
+const { isValidId } = require("../../middlwares")
 
 
 const router = express.Router()
@@ -14,13 +16,15 @@ const router = express.Router()
 
 router.get('/', getAll)
 
-router.get('/:id', getContactById)
+router.get('/:id', isValidId, getContactById)
 
-router.delete('/:id', deleteContactById)
+router.delete('/:id', isValidId, deleteContactById)
 
 router.post('/', validateBody(contactsSchema), addContact)
 
-router.put('/:id', validateBody(contactsSchema), updateContactById)
+router.put('/:id', isValidId, validateBody(contactsSchema), updateContactById)
+
+router.patch('/:id/favorite', isValidId, validateFavoriteBody(contactUpdateSchema), updateStatusContact)
 
 
 module.exports = router
