@@ -1,7 +1,8 @@
 const { cntrWrap } = require("./cntlWrap")
-const validateBody = require("./validateBody")
+const { validateBody, validateFavoriteBody } = require("./validateBody")
 
 module.exports = {
     cntrWrap,
     validateBody,
+    validateFavoriteBody,
 };
