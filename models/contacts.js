@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const { Schema, model } = mongoose
+const { handleMongooseError } = require("../middlwares")
 
 const contactSchema = new Schema({
   name: {
@@ -18,12 +19,13 @@ const contactSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+  },
 }, { versionKey: false, timestamps: true })
 
-contactSchema.post("save", (error, data, next) => {
-  error.status = 400;
-  next()
-})
+contactSchema.post("save", handleMongooseError)
 
 const Contact = model("contact", contactSchema);
 
