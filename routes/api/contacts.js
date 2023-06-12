@@ -9,12 +9,14 @@ const { getAll,
 const { contactsSchema, contactUpdateSchema } = require("../../schema/contacts-schema")
 const { validateBody, validateFavoriteBody } = require("../../decorator")
 const { isValidId } = require("../../middlwares")
+const authentacate = require("../../middlwares/authenticate")
 
 
 const router = express.Router()
 
+router.use(authentacate)
 
-router.get('/', getAll)
+router.get('/', authentacate, getAll)
 
 router.get('/:id', isValidId, getContactById)
 
