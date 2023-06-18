@@ -8,7 +8,8 @@ const User = require("../models/user")
 const { createNewError } = require("../helpers")
 const { cntrWrap } = require('../decorator');
 const { SECRET_KEY } = process.env;
-const avatrsDir = path.join(process.cwd(), "public", "avatars");
+const avatrsDir = path.resolve("public", "avatars");
+
 
 
 const registerUser = async (req, res) => {
@@ -86,12 +87,11 @@ const updateSubscription = async (req, res) => {
 const updateAvatar = async (req, res) => {
     const { id } = req.user
     const { path, filename } = req.file
+    const newFileName = `${Date.now()}_${filename}`
     console.log(avatrsDir);
-    console.log(filename);
-    let createdNewPath = path.join('/foo', 'bar', 'baz/asdf', 'quux')
-    console.log(id, createdNewPath);
+    const newPath = path.join(avatrsDir, newFileName)
+    console.log(newPath);
 
-    // console.log(newPath);
     // await fs.rename(path, newPath)
     // const avatar = path.join("avatars", filename)
     // const result = await User.findByIdAndUpdate(id, { avatarURL: avatar })
