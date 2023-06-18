@@ -91,11 +91,10 @@ const updateAvatar = async (req, res) => {
     console.log(avatrsDir);
     const newPath = path.join(avatrsDir, newFileName)
     console.log(newPath);
-
-    // await fs.rename(path, newPath)
-    // const avatar = path.join("avatars", filename)
-    // const result = await User.findByIdAndUpdate(id, { avatarURL: avatar })
-    res.status(200).json({ message: "done" })
+    await fs.rename(path, newPath)
+    const avatar = path.join("avatars", filename)
+    const result = await User.findByIdAndUpdate(id, { avatarURL: avatar })
+    res.status(200).json({ message: avatar })
 
 }
 
