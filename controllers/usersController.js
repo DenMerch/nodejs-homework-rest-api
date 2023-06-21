@@ -1,22 +1,32 @@
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
+const gravatar = require('gravatar');
+const path = require('path');
+const fs = require("fs/promises");
+const Jimp = require("jimp");
 
 const User = require("../models/user")
 const { createNewError } = require("../helpers")
 const { cntrWrap } = require('../decorator');
 const { SECRET_KEY } = process.env;
 
+const avatrsDir = path.resolve("public", "avatars");
+
+
+
+
 const registerUser = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email })
+    const avatar = gravatar.url(email);
 
     if (user) {
         throw createNewError(409, "Email in use")
     }
     const cryptPassw = await bcrypt.hash(password, 10)
 
-    const newUser = await User.create({ ...req.body, password: cryptPassw });
+    const newUser = await User.create({ ...req.body, password: cryptPassw, avatarURL: avatar });
 
     res.status(201).json({
         user: {
@@ -77,12 +87,37 @@ const updateSubscription = async (req, res) => {
     })
 }
 
+const updateAvatar = async (req, res) => {
+
+    const { id } = req.user
+    const { path: tempPath, filename } = req.file
+
+    const newFileName = `${id}_${filename}`
+    const newPath = path.join(avatrsDir, newFileName)
+
+    await fs.rename(tempPath, newPath)
+    Jimp.read(newPath)
+        .then((avatar) => {
+            return avatar
+                .resize(250, 250)
+                .write(newPath);
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+    const avatar = path.join("avatars", newFileName)
+    await User.findByIdAndUpdate(id, { avatarURL: avatar })
+
+    res.status(200).json({ avatarURL: avatar })
+}
+
 
 module.exports = {
     registerUser: cntrWrap(registerUser),
     loginUser: cntrWrap(loginUser),
     getCurrent: cntrWrap(getCurrent),
     logoutUser: cntrWrap(logoutUser),
-    updateSubscription: cntrWrap(updateSubscription)
+    updateSubscription: cntrWrap(updateSubscription),
+    updateAvatar: cntrWrap(updateAvatar)
 
 }
