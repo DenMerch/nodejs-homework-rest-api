@@ -2,7 +2,7 @@ const express = require('express')
 
 const { validateBody } = require("../../decorator")
 const { userRegisterSchema, userLoginSchema, userUpdateSubscription } = require("../../schema/users")
-const { registerUser, loginUser, getCurrent, logoutUser, updateSubscription, updateAvatar } = require("../../controllers/usersController")
+const { registerUser, loginUser, getCurrent, logoutUser, updateSubscription, updateAvatar, verify } = require("../../controllers/usersController")
 const authentacate = require("../../middlwares/authenticate")
 const { upload } = require("../../middlwares")
 
@@ -11,6 +11,7 @@ const authRouter = express.Router()
 authRouter.post("/register", validateBody(userRegisterSchema), registerUser);
 
 authRouter.post("/login", validateBody(userLoginSchema), loginUser)
+authRouter.get("/verify/:verificationToken", verify)
 
 authRouter.get("/current", authentacate, getCurrent)
 

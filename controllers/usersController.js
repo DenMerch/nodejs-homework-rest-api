@@ -4,11 +4,13 @@ const gravatar = require('gravatar');
 const path = require('path');
 const fs = require("fs/promises");
 const Jimp = require("jimp");
+const nanoid = require("nanoid")
 
 const User = require("../models/user")
 const { createNewError } = require("../helpers")
 const { cntrWrap } = require('../decorator');
-const { SECRET_KEY } = process.env;
+const { SECRET_KEY, BASE_URL } = process.env;
+const { sendEmail } = require("../helpers")
 
 const avatrsDir = path.resolve("public", "avatars");
 
@@ -20,13 +22,21 @@ const registerUser = async (req, res) => {
 
     const user = await User.findOne({ email })
     const avatar = gravatar.url(email);
+    const verificationToken = Date.now();
 
     if (user) {
         throw createNewError(409, "Email in use")
     }
     const cryptPassw = await bcrypt.hash(password, 10)
 
-    const newUser = await User.create({ ...req.body, password: cryptPassw, avatarURL: avatar });
+    const newUser = await User.create({ ...req.body, password: cryptPassw, avatarURL: avatar, verificationToken });
+    const emailMsg = {
+        to: email,
+        subject: 'Sending with SendGrid is Fun',
+        text: `<a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">Click to verify email</a>`,
+    }
+
+    await sendEmail(emailMsg)
 
     res.status(201).json({
         user: {
@@ -35,6 +45,14 @@ const registerUser = async (req, res) => {
 
         }
     })
+}
+
+const verify = async (req, res) => {
+    const { verificationToken } = req.params
+
+
+    res.status(200).json({ message: 'Verification successful' })
+
 }
 
 const loginUser = async (req, res) => {
@@ -114,6 +132,7 @@ const updateAvatar = async (req, res) => {
 
 module.exports = {
     registerUser: cntrWrap(registerUser),
+    verify: cntrWrap(verify),
     loginUser: cntrWrap(loginUser),
     getCurrent: cntrWrap(getCurrent),
     logoutUser: cntrWrap(logoutUser),
