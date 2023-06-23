@@ -29,7 +29,7 @@ const registerUser = async (req, res) => {
     const newUser = await User.create({ ...req.body, password: cryptPassw, avatarURL: avatar, verificationToken });
     const emailMsg = {
         to: email,
-        subject: 'Sending with SendGrid is Fun',
+        subject: 'Verification',
         html: `<a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">Click to verify email</a>`,
     }
 
@@ -53,7 +53,7 @@ const sendVerifyEmail = async (req, res) => {
     }
     const emailMsg = {
         to: email,
-        subject: 'Sending with SendGrid is Fun',
+        subject: 'Verification',
         html: `<a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">Click to verify email</a>`,
     }
 
@@ -86,6 +86,9 @@ const loginUser = async (req, res) => {
     const passwordCompare = await bcrypt.compare(password, user.password)
     if (!passwordCompare) {
         throw createNewError(401, "Email or password is wrong")
+    }
+    if (!user.verify) {
+        throw createNewError(401, "Unauthorized")
     }
     const { _id: id } = user;
     const payload = {
