@@ -1,31 +1,112 @@
-## GoIT Node.js Course Template Homework
+## Contacts storage
 
-Виконайте форк цього репозиторію для виконання домашніх завдань (2-6)
-Форк створить репозиторій на вашому http://github.com
+## USER
 
-Додайте ментора до колаборації
+/register: POST
+Request body - json:
+{
+    "email": "across@mail.com",
+  "password": "123456"
+}
+\\\\\\\\\\\\\\\\\
 
-Для кожної домашньої роботи створюйте свою гілку.
+/login: POST
+Request body - json:
+{
+    "email": "across@mail.com",
+  "password": "123456"
+}
+get - TOKEN
+\\\\\\\\\\\\\\\\\
 
-- hw02
-- hw03
-- hw04
-- hw05
-- hw06
+/logout: POST
+The token issued to the current user
+\\\\\\\\\\\\\\\\\
 
-Кожна нова гілка для др повинна робитися з master
+/current: GET
+The token issued to the current user
+\\\\\\\\\\\\\\\\\
 
-Після того, як ви закінчили виконувати домашнє завдання у своїй гілці, необхідно зробити пулл-реквест (PR). Потім додати ментора для рев'ю коду. Тільки після того, як ментор заапрувить PR, ви можете виконати мердж гілки з домашнім завданням у майстер.
+/: PATCH
+The token issued to the current user
+Request body - json:
+{
+    "subscription": ["starter", "pro", "business"]
+}
+\\\\\\\\\\\\\\\\\
 
-Уважно читайте коментарі ментора. Виправте зауваження та зробіть коміт у гілці з домашнім завданням. Зміни підтягнуться у PR автоматично після того, як ви відправите коміт з виправленнями на github
-Після виправлення знову додайте ментора на рев'ю коду.
+/avatars: PATCH
+The token issued to the current user
+Request body - form-data:
+file - avatar.jpg,png
+\\\\\\\\\\\\\\\\\
 
-- При здачі домашньої роботи є посилання на PR
-- JS-код чистий та зрозумілий, для форматування використовується Prettier
 
-### Команди:
+## CONTACTS
 
-- `npm start` &mdash; старт сервера в режимі production
-- `npm run start:dev` &mdash; старт сервера в режимі розробки (development)
-- `npm run lint` &mdash; запустити виконання перевірки коду з eslint, необхідно виконувати перед кожним PR та виправляти всі помилки лінтера
-- `npm lint:fix` &mdash; та ж перевірка лінтера, але з автоматичними виправленнями простих помилок
+/: GET
+The token issued to the current user
+
+\\\\\\\\\\\\\\\\\
+
+/:id: GET
+The token issued to the current user
+Request body - json:
+{
+    "id": "someId"
+}
+\\\\\\\\\\\\\\\\\
+
+/:id: DELETE
+The token issued to the current user
+Request body - json:
+{
+    "id": "someId"
+}
+\\\\\\\\\\\\\\\\\
+
+/:id: DELETE
+The token issued to the current user
+Request body - json:
+{
+    "id": "someId"
+}
+\\\\\\\\\\\\\\\\\
+
+/: POST
+The token issued to the current user
+Request body - json:
+{
+    "name": "someName",
+    "email":"someEmail",
+    "phone":"somePhone"
+}
+\\\\\\\\\\\\\\\\\
+
+/:id: PUT
+The token issued to the current user
+Request body - json:
+{
+    "name": "someName",
+    "email":"someEmail",
+    "phone":"somePhone"
+}
+\\\\\\\\\\\\\\\\\
+
+/:id: PUT
+The token issued to the current user
+Request body - json:
+{
+    "name": "someName",
+    "email":"someEmail",
+    "phone":"somePhone"
+}
+\\\\\\\\\\\\\\\\\
+
+/:id/favorite: PATCH
+The token issued to the current user
+Request body - json:
+{
+    "favorite": [trye/false]
+}
+\\\\\\\\\\\\\\\\\
